@@ -338,21 +338,6 @@ app.post('/api/vs/join', authenticateToken, (req, res) => {
   res.json({ room_code, room_id: room.id });
 });
 
-app.get('/api/vs/room/:code', (req, res) => {
-  const room = db.prepare('SELECT * FROM vs_rooms WHERE room_code = ?').get(req.params.code);
-  if (!room) return res.status(404).json({ error: 'Room introuvable' });
-  res.json(room);
-});
-
-app.post('/api/vs/submit', authenticateToken, (req, res) => {
-  const { room_code, corrections_count } = req.body;
-  const room = db.prepare('SELECT * FROM vs_rooms WHERE room_code = ?').get(room_code);
-  if (!room) return res.status(404).json({ error: 'Room introuvable' });
-
-  db.prepare('INSERT INTO vs_scores (room_id, user_id, corrections_count) VALUES (?, ?, ?)').run(room.id, req.user.id, corrections_count);
-  res.json({ ok: true });
-});
-
 // ── WebSocket ─────────────────────────────────────────────────────────────────
 
 const rooms = new Map();
