@@ -1,119 +1,61 @@
 # Grammerde
 
-Application web de correction de texte gamifiée. Des articles Wikipedia ou Le Monde, des fautes injectées par GPT-4o, et un chrono. Trouve-les toutes.
+**Sauras-tu trouver toutes les fautes ?**
+
+Grammerde est un jeu de correction de texte. Un vrai article (Wikipedia, en français ou en anglais) est discrètement truffé de fautes — conjugaison, accords, homophones, orthographe — et tu dois toutes les repérer avant la fin du chrono.
+
+## Comment ça marche
+
+1. Choisis les types de fautes à traquer et la langue du texte
+2. Lance la partie : un article apparaît, truffé d'erreurs cachées
+3. Clique sur chaque mot que tu penses fautif avant la fin du temps
+4. Découvre ton score et les fautes que tu as manquées
 
 ## Fonctionnalités
 
-- **Solo** : article aléatoire, difficultés et types de fautes configurables
-- **Mode VS** : affrontement en temps réel via WebSocket, 120 secondes
-- **Leaderboard** : top 10 par score moyen (semaine / mois / tout temps)
-- **Profil** : graphique d'évolution, statistiques, historique paginé
-- **Auth** : inscription / connexion JWT, jeu anonyme possible
+### 🎯 Mode Solo
+Configure ta partie à ta façon :
+- **Types de fautes** : conjugaison, accords, homophones, orthographe (active ou désactive chaque catégorie)
+- **Langue** : français ou anglais, articles tirés au hasard sur Wikipedia
+- Un chrono adapté à la longueur du texte
 
-## Stack
+### ⚔️ Mode VS
+Défie un autre joueur en temps réel sur le même texte. Premier arrivé, meilleur score gagne. Les corrections de chacun s'affichent en direct pendant la partie.
 
-| Couche | Techno |
-|--------|--------|
-| Backend | Node.js 18+ / Express 4 |
-| Base de données | SQLite via better-sqlite3 |
-| IA | OpenAI GPT-4o |
-| Temps réel | WebSocket (ws) |
-| Scraping | node-fetch + cheerio |
-| Frontend | HTML / CSS / JS vanilla |
+### 🏆 Classement
+Le top des meilleurs joueurs, filtrable par période :
+- Cette semaine
+- Ce mois
+- Depuis toujours
 
-## Installation
+Classement séparé pour le mode Solo et le mode VS.
 
-### Prérequis
+### 👤 Profil & statistiques
+- Historique de toutes tes parties
+- Courbe d'évolution de ton score dans le temps
+- Statistiques détaillées (fautes trouvées, ratées, fausses alertes)
+- Personnalisation de ton avatar et pseudo
 
-- Node.js 18+ (testé sur 24)
-- Une clé API OpenAI
+### 🔐 Compte (facultatif)
+Tu peux jouer sans créer de compte. Pour garder ton historique, suivre ta progression et apparaître au classement, inscris-toi avec un pseudo, un email et un mot de passe.
 
-### Étapes
+## Lancer le projet
 
 ```bash
-# 1. Cloner le projet
-git clone <repo>
-cd grammerde
-
-# 2. Installer les dépendances
 npm install
-
-# 3. Configurer l'environnement
-cp .env.example .env
-# Éditer .env et renseigner OPENAI_API_KEY
-
-# 4. Lancer le serveur
 npm start
-# ou en mode dev (rechargement auto)
-npm run dev
 ```
 
-Le serveur tourne sur [http://localhost:3000](http://localhost:3000).
+L'application est accessible sur [http://localhost:3000](http://localhost:3000).
 
-## Variables d'environnement
-
-Créez un fichier `.env` à la racine :
+Variables d'environnement requises dans un fichier `.env` :
 
 ```env
-OPENAI_API_KEY=sk-...
+GROQ_API_KEY=gsk_...
 JWT_SECRET=changez-moi-en-production
 PORT=3000
 ```
 
-## Architecture
+---
 
-```
-grammerde/
-├── backend/
-│   ├── server.js       # Express + WebSocket + routes
-│   ├── db.js           # Initialisation SQLite
-│   ├── auth.js         # bcrypt + JWT
-│   ├── scraper.js      # Wikipedia / Le Monde
-│   └── ai.js           # Injection de fautes GPT-4o
-├── frontend/
-│   ├── index.html      # Landing page + configurateur
-│   ├── game.html       # Jeu solo
-│   ├── vs.html         # Mode VS
-│   ├── profile.html    # Profil joueur
-│   ├── css/style.css
-│   └── js/
-│       ├── app.js
-│       ├── game.js
-│       ├── vs.js
-│       ├── profile.js
-│       └── auth.js
-└── package.json
-```
-
-## API
-
-| Méthode | Route | Auth | Description |
-|---------|-------|------|-------------|
-| POST | `/api/auth/register` | — | Créer un compte |
-| POST | `/api/auth/login` | — | Se connecter |
-| GET | `/api/auth/me` | JWT | Profil courant |
-| POST | `/api/game/start` | optionnel | Démarrer une partie |
-| POST | `/api/game/submit` | optionnel | Soumettre corrections |
-| GET | `/api/game/history` | JWT | Historique |
-| GET | `/api/leaderboard` | — | Top 10 (filtre `?period=week\|month\|all`) |
-| POST | `/api/vs/create` | JWT | Créer une room VS |
-| POST | `/api/vs/join` | JWT | Rejoindre une room |
-| GET | `/api/vs/room/:code` | — | État d'une room |
-
-## WebSocket
-
-Connexion : `ws://localhost:3000`
-
-Messages client → serveur :
-```json
-{ "type": "join_room", "room_code": "ABC123", "user_id": 1, "username": "Alice" }
-{ "type": "correction", "room_code": "ABC123", "user_id": 1, "corrections_count": 5 }
-```
-
-Messages serveur → client :
-```json
-{ "type": "game_start", "corrupted_text": "...", "total_errors": 12, "duration": 120 }
-{ "type": "tick", "remaining": 89 }
-{ "type": "score_update", "scores": { "1": 3, "2": 5 } }
-{ "type": "game_over", "scores": {...}, "winner_id": 2 }
-```
+*Grammerde © 2026 — Corriger, c'est gagner.*
