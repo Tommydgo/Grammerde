@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /api/
+Disallow: /game.html
+Disallow: /profile.html
+Sitemap: https://grammerde.fr/sitemap.xml

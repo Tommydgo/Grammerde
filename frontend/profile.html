@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grammerde — Mon profil</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="favicon" href="favicon.ico">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="logo">Gram<span>merde</span></a>
+  <div class="nav-actions">
+    <button class="theme-btn" id="theme-btn" aria-label="Basculer thème">
+      <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+    <a href="/" class="btn btn-ghost">← Accueil</a>
+    <span class="btn btn-ghost hidden" id="user-menu" style="cursor:default">
+      <span id="nav-username"></span>
+    </span>
+    <button class="btn btn-ghost" id="btn-logout" data-i18n="nav.logout">Déconnexion</button>
+  </div>
+</nav>
+
+<div class="profile-layout">
+
+  <!-- Header -->
+  <div class="profile-header">
+    <img class="profile-avatar" id="profile-avatar" src="" alt="avatar">
+    <div>
+      <div class="profile-name" id="profile-name">—</div>
+      <div class="profile-since" id="profile-since"></div>
+    </div>
+    <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
+      <button class="btn btn-outline" id="btn-edit-profile" data-i18n="profile.btn_edit">Modifier le profil</button>
+      <a href="/" class="btn btn-primary" data-i18n="profile.btn_new_game">Nouvelle partie</a>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-grid" style="grid-template-columns:repeat(auto-fit,minmax(140px,1fr))">
+    <div class="stat-card">
+      <div class="stat-card-value" id="stat-games">—</div>
+      <div class="stat-card-label">Parties jouées</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-value" id="stat-avg" style="color:var(--green)">—</div>
+      <div class="stat-card-label">Score moyen</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-value" id="stat-streak" style="color:var(--orange)">—</div>
+      <div class="stat-card-label">Streak</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-value" id="stat-rank" style="font-size:1.5rem">—</div>
+      <div class="stat-card-label">Classement Solo</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-value" id="stat-vs-rank" style="font-size:1.5rem;color:var(--red)">—</div>
+      <div class="stat-card-label">Classement VS</div>
+    </div>
+  </div>
+
+  <!-- Chart -->
+  <div class="chart-wrap">
+    <canvas id="score-chart"></canvas>
+  </div>
+
+  <!-- History -->
+  <h2 style="font-family:var(--font-display);font-size:1.3rem;margin-bottom:16px">Historique Solo</h2>
+  <table class="history-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Langue</th>
+        <th>Score</th>
+        <th>Corrections</th>
+        <th>Durée</th>
+      </tr>
+    </thead>
+    <tbody id="history-tbody">
+      <tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:32px">Chargement…</td></tr>
+    </tbody>
+  </table>
+
+  <!-- VS Chart -->
+  <div id="vs-chart-wrap">
+    <h2 style="font-family:var(--font-display);font-size:1.3rem;margin-top:40px;margin-bottom:16px">Évolution VS</h2>
+    <div class="chart-wrap">
+      <canvas id="vs-score-chart"></canvas>
+    </div>
+  </div>
+
+  <!-- VS History -->
+  <h2 style="font-family:var(--font-display);font-size:1.3rem;margin-top:40px;margin-bottom:16px">Historique VS</h2>
+  <table class="history-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Langue</th>
+        <th>Adversaire</th>
+        <th>Score</th>
+        <th>Résultat</th>
+      </tr>
+    </thead>
+    <tbody id="vs-history-tbody">
+      <tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:32px">Chargement…</td></tr>
+    </tbody>
+  </table>
+
+</div>
+
+<footer>
+  <span data-i18n="footer">Grammerde © 2026 — Corriger, c'est gagner.</span>
+</footer>
+
+<!-- Edit Profile Modal -->
+<div id="modal-edit-profile" class="modal-overlay hidden">
+  <div class="modal">
+    <div class="modal-title">
+      <span data-i18n="profile.modal.title">Modifier le profil</span>
+      <span class="modal-close" id="close-edit-profile">&times;</span>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:16px;margin-bottom:20px">
+      <img id="edit-avatar-preview" src="" alt="aperçu avatar" style="width:80px;height:80px;border-radius:50%;border:2px solid var(--border)">
+    </div>
+    <form id="form-edit-profile">
+      <div class="form-group">
+        <label class="form-label" data-i18n="profile.modal.username">Pseudo</label>
+        <input id="edit-username" type="text" class="form-input" placeholder="GrammairNinja" required minlength="2">
+      </div>
+      <div class="form-group">
+        <label class="form-label" data-i18n="profile.modal.avatar_seed">Graine d'avatar</label>
+        <input id="edit-avatar-seed" type="text" class="form-input" placeholder="mot-clé ou pseudo" autocomplete="off">
+        <div style="font-size:12px;color:var(--text-muted);margin-top:4px" data-i18n="profile.modal.avatar_hint">Laissez vide pour utiliser votre pseudo</div>
+      </div>
+      <div class="form-error" id="edit-profile-error"></div>
+      <div style="display:flex;gap:8px;margin-top:16px">
+        <button type="button" class="btn btn-outline" id="btn-cancel-edit" style="flex:1" data-i18n="profile.modal.cancel">Annuler</button>
+        <button type="submit" class="btn btn-primary" style="flex:1" data-i18n="profile.modal.save">Enregistrer</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script type="module" src="/js/profile.js"></script>
+</body>
+</html>

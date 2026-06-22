@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grammerde — Partie en cours</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="favicon" href="favicon.ico">
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="logo">Gram<span>merde</span></a>
+  <div class="nav-actions">
+    <button class="theme-btn" id="theme-btn" aria-label="Basculer thème">
+      <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+    <a href="profile.html" class="btn btn-ghost hidden" id="user-menu">
+      <span id="nav-username"></span>
+    </a>
+    <button class="btn btn-ghost" id="btn-login" data-i18n="nav.login">Connexion</button>
+    <button class="btn btn-ghost hidden" id="btn-logout" data-i18n="nav.logout">Déconnexion</button>
+  </div>
+</nav>
+
+<!-- Game View -->
+<div id="game-view">
+  <div class="game-layout">
+    <main class="game-main">
+      <div class="game-header">
+        <h1 class="game-title" data-i18n="game.title">Trouve les fautes</h1>
+        <button class="btn btn-primary" id="btn-submit" data-i18n="game.btn_submit">Terminer et voir le score</button>
+      </div>
+
+      <div class="progress-label" id="progress-label">0 / 0 fautes corrigées</div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+      </div>
+
+      <div class="text-display" id="text-display">
+        <div style="text-align:center;color:var(--text-muted);padding:40px">Chargement du texte…</div>
+      </div>
+    </main>
+
+    <aside class="game-sidebar">
+      <div class="timer hidden" id="timer-block">
+        <div class="timer-value" id="timer-value">2:00</div>
+        <div class="timer-label" data-i18n="game.timer_label">Temps restant</div>
+      </div>
+
+      <div class="sidebar-card">
+        <div class="stat-row">
+          <span class="stat-label" data-i18n="game.sidebar.corrections">Corrections</span>
+          <span class="stat-value green" id="stat-corrections">0</span>
+        </div>
+        <div class="stat-row" style="margin-bottom:0">
+          <span class="stat-label" data-i18n="game.sidebar.total_errors">Total fautes</span>
+          <span class="stat-value red" id="stat-total">—</span>
+        </div>
+      </div>
+
+      <div class="sidebar-card" style="font-size:12px;color:var(--text-dim);line-height:1.6">
+        <strong style="color:var(--text)" data-i18n="game.sidebar.how_to_title">Comment jouer</strong><br><br>
+        <span data-i18n="game.sidebar.how_to_text">Cliquez sur n'importe quel mot pour proposer une correction. Les fautes peuvent être : conjugaison, orthographe, accords, homophones, ponctuation ou syntaxe.</span>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- Results View -->
+<div id="results-view" class="hidden">
+  <div class="results">
+    <div class="score-display">
+      <div class="score-big" id="score-value">—</div>
+      <div class="score-label" id="score-summary"></div>
+    </div>
+
+    <div style="display:flex;gap:12px;justify-content:center;margin-bottom:40px">
+      <button class="btn btn-primary btn-lg" id="btn-replay" data-i18n="game.results.btn_replay">Rejouer</button>
+      <a href="profile.html" class="btn btn-outline btn-lg" data-i18n="game.results.btn_profile">Voir mon profil</a>
+    </div>
+
+    <h2 style="font-family:var(--font-display);font-size:1.3rem;font-weight:700;margin-bottom:16px">Mes statistiques</h2>
+    <div class="stats-grid" style="margin-bottom:32px">
+      <div class="stat-card">
+        <div class="stat-card-value" id="result-stat-applied">—</div>
+        <div class="stat-card-label">Corrections appliquées</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-value" style="color:var(--green)" id="result-stat-valid">—</div>
+        <div class="stat-card-label">Valides</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-value" style="color:var(--orange)" id="result-stat-wrong">—</div>
+        <div class="stat-card-label">Fausses</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-value" style="color:var(--red)" id="result-stat-missed">—</div>
+        <div class="stat-card-label">Oubliées</div>
+      </div>
+    </div>
+
+    <h2 style="font-family:var(--font-display);font-size:1.3rem;font-weight:700;margin-bottom:16px" data-i18n="game.results.detail_title">Détail du texte</h2>
+
+    <div class="results-legend">
+      <span class="results-legend-title" data-i18n="game.results.legend.title">Légende</span>
+      <span class="result-badge badge-result-green" data-i18n="game.results.legend.correct">Correctement corrigé</span>
+      <span class="result-badge badge-result-orange" data-i18n="game.results.legend.wrong">Mal corrigé</span>
+      <span class="result-badge badge-result-red" data-i18n="game.results.legend.missed">Non corrigé</span>
+      <span class="result-badge badge-result-blue" data-i18n="game.results.legend.valid_touched">Mot correct modifié</span>
+    </div>
+
+    <div class="text-display" id="results-text"></div>
+  </div>
+</div>
+
+<!-- Correction Popup -->
+<div id="popup-overlay" class="popup-overlay hidden">
+  <div class="popup">
+    <div class="popup-label" data-i18n="game.popup.invalid_label">Mot invalide affiché :</div>
+    <div class="popup-word" id="popup-word"></div>
+    <div class="popup-label" style="margin-top:12px" data-i18n="game.popup.valid_label">Mot valide (votre correction) :</div>
+    <input
+      type="text"
+      class="popup-input"
+      id="popup-input"
+      data-i18n-ph="game.popup.placeholder"
+      placeholder="Votre correction…"
+      autocomplete="off"
+      spellcheck="false"
+    >
+    <div class="popup-actions">
+      <button class="btn btn-ghost" id="btn-popup-skip" data-i18n="game.popup.skip">Passer</button>
+      <button class="btn btn-green" id="btn-popup-validate" data-i18n="game.popup.validate">Valider</button>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="/js/game.js"></script>
+</body>
+</html>
