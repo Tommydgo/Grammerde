@@ -1,52 +1,62 @@
-import OpenAI from 'openai';
+import Groq from 'groq-sdk';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+const groq = new Groq({
+  apiKey: process.env.GROQ_API_KEY,
 });
 
-// Same word-splitting logic as the frontend renderAllWords — must stay in sync
-function processSegments(segments) {
-  const corrupted_text = segments.map(s => s.type === 'error' ? s.invalide : s.content).join('');
+// Same word-splitting logic as the frontend renderAllWords — must stay in sync.
+// Substitutes corrections directly into the original text (rather than trusting the
+// model to reconstruct the full text), so exact reconstruction is guaranteed regardless
+// of model quality.
+function applyCorrections(text, corrections) {
+  const tokens = text.split(/(\s+)/);
+  const usedWords = new Set();
 
-  // Build character range for each segment
-  let pos = 0;
-  const ranges = segments.map((seg) => {
-    const content = seg.type === 'error' ? seg.invalide : seg.content;
-    const range = { start: pos, end: pos + content.length, seg };
-    pos += content.length;
-    return range;
-  });
+  // Map each correction to the first unused matching token
+  const byTokenIndex = new Map();
+  for (const c of corrections) {
+    if (usedWords.has(c.original)) continue;
+    const idx = tokens.findIndex((token, i) => {
+      if (byTokenIndex.has(i)) return false;
+      const clean = token.replace(/^[^a-zA-ZÀ-ÿ]+|[^a-zA-ZÀ-ÿ]+$/g, '');
+      return clean === c.original;
+    });
+    if (idx === -1) continue;
+    byTokenIndex.set(idx, c);
+    usedWords.add(c.original);
+  }
 
-  // Walk the same token split as the frontend to assign span_idx
   const errors_map = [];
-  const usedSegments = new Set();
   let spanIdx = 0;
-  let charPos = 0;
-
-  for (const token of corrupted_text.split(/(\s+)/)) {
+  const outTokens = tokens.map((token, i) => {
     const isWhitespace = /^\s+$/.test(token);
     const isPunct    = /^[.,;:!?«»"'()\[\]\-—–]+$/.test(token);
     const clean      = token.replace(/^[^a-zA-ZÀ-ÿ]+|[^a-zA-ZÀ-ÿ]+$/g, '');
     const isWord     = !isWhitespace && !isPunct && clean;
 
-    if (isWord) {
-      const range = ranges.find(r => charPos >= r.start && charPos < r.end);
-      if (range?.seg.type === 'error' && !usedSegments.has(range)) {
-        usedSegments.add(range);
-        errors_map.push({
-          span_idx:          spanIdx,
-          displayed_invalid: clean,
-          original_valid:    range.seg.valide,
-          error_type:        range.seg.error_type,
-          explanation:       range.seg.explanation,
-        });
-      }
-      spanIdx++;
-    }
-    charPos += token.length;
-  }
+    if (!isWord) return token;
 
-  return { corrupted_text, errors_map };
+    const correction = byTokenIndex.get(i);
+    if (!correction) {
+      spanIdx++;
+      return token;
+    }
+
+    const lead  = (token.match(/^[^a-zA-ZÀ-ÿ]+/) || [''])[0];
+    const trail = (token.match(/[^a-zA-ZÀ-ÿ]+$/) || [''])[0];
+
+    errors_map.push({
+      span_idx:          spanIdx,
+      displayed_invalid: correction.invalide,
+      original_valid:    correction.original,
+      error_type:        correction.error_type,
+      explanation:       correction.explanation,
+    });
+    spanIdx++;
+    return lead + correction.invalide + trail;
+  });
+
+  return { corrupted_text: outTokens.join(''), errors_map };
 }
 
 const LANG_NAMES = {
@@ -80,33 +90,28 @@ export async function injectErrors(text, difficulty = 'moyen', errorTypes = [], 
     .map(t => `- ${t} : ${examples[t] || '(voir définition standard)'}`)
     .join('\n');
 
-  const systemPrompt = `Tu es un assistant linguistique expert qui introduit des fautes dans un texte en ${langName}.
+  const systemPrompt = `Tu es un assistant linguistique expert qui repère des mots à corrompre dans un texte en ${langName}.
 
-FORMAT DE SORTIE : JSON avec exactement deux champs :
-- "plan" : tableau de réflexion préparatoire — liste des mots que tu vas corrompre avec leur contexte (5-6 mots autour), le remplacement prévu et le type. Sert uniquement à ta réflexion interne.
-- "segments" : décomposition COMPLÈTE et EXHAUSTIVE du texte en segments consécutifs, chaque segment étant soit :
-    { "type": "text",  "content": "..." }
-    { "type": "error", "invalide": "...", "valide": "...", "error_type": "...", "explanation": "..." }
+FORMAT DE SORTIE : JSON avec exactement un champ :
+- "corrections" : tableau d'objets { "original": "...", "invalide": "...", "error_type": "...", "explanation": "..." }
 
 RÈGLES ABSOLUES (violation = résultat inutilisable) :
-1. Les segments bout-à-bout doivent reconstituer le texte original EXACTEMENT, caractère par caractère, espaces et ponctuation inclus.
-2. "valide" DOIT être le mot EXACT copié du texte original — même casse, même forme, aucune modification.
-3. "invalide" est le mot fautif affiché au joueur à la place du mot original.
-4. "invalide" ≠ "valide" — si les deux sont identiques, la faute est invalide.
-5. UN SEUL MOT PAR FAUTE — INTERDICTION ABSOLUE de corrompre un groupe de mots. "invalide" et "valide" ne contiennent jamais d'espace. Exemples STRICTEMENT INTERDITS : invalide "ne pas", invalide "les chats", invalide "avait été", invalide "de la". Si tu veux corrompre une expression, choisis UN seul mot dans cette expression.
-6. UNICITÉ — Ne jamais corrompre deux fois le même mot ou la même forme dans le texte. Si "était" apparaît 3 fois, tu ne peux le corrompre qu'une fois maximum. Chaque mot corrompu doit être unique dans le texte.
-7. Ne corromps JAMAIS : noms propres, chiffres, sigles, abréviations, ponctuation.
-8. La faute doit être INCONTESTABLEMENT fausse dans son contexte — évite tout cas ambigu ou subjectif.
-9. Introduis entre 8 et 12 fautes, réparties équitablement sur les types demandés (minimum 2 par type si possible).
+1. "original" DOIT être un mot copié EXACTEMENT du texte (même casse), sans espace, sans ponctuation collée.
+2. "invalide" est le mot fautif qui remplacera "original" — un seul mot, sans espace.
+3. "invalide" ≠ "original" — si les deux sont identiques, la faute est invalide.
+4. UNICITÉ — ne propose jamais deux corrections avec le même "original".
+5. Ne corromps JAMAIS : noms propres, chiffres, sigles, abréviations.
+6. La faute doit être INCONTESTABLEMENT fausse dans son contexte — évite tout cas ambigu ou subjectif.
+7. Introduis entre 8 et 12 fautes, réparties équitablement sur les types demandés (minimum 2 par type si possible).
 
 EXEMPLES PAR TYPE DE FAUTE :
 ${examplesBlock}
 
 VALIDATION obligatoire avant chaque faute :
-✓ "valide" est-il la copie exacte du mot original du texte ?
+✓ "original" est-il la copie exacte d'un mot du texte ?
 ✓ "invalide" est-il clairement et incontestablement faux dans ce contexte précis ?
 ✓ Un locuteur natif de ${langName} reconnaîtrait-il cette faute sans hésitation ?
-✓ "invalide" ≠ "valide" ?
+✓ "invalide" ≠ "original" ?
 Si une réponse est NON → ne pas inclure cette faute.`;
 
   const userPrompt = `Types de fautes à introduire (tous obligatoires, répartis équitablement) : ${activeTypes.join(', ')}
@@ -114,8 +119,8 @@ Si une réponse est NON → ne pas inclure cette faute.`;
 Texte :
 ${text}`;
 
-  const response = await openai.chat.completions.create({
-    model: 'gpt-4o',
+  const response = await groq.chat.completions.create({
+    model: 'llama-3.3-70b-versatile',
     messages: [
       { role: 'system', content: systemPrompt },
       { role: 'user',   content: userPrompt },
@@ -125,18 +130,16 @@ ${text}`;
   });
 
   const result = JSON.parse(response.choices[0].message.content);
-  if (!Array.isArray(result.segments)) {
-    throw new Error('Réponse OpenAI invalide');
+  if (!Array.isArray(result.corrections)) {
+    throw new Error('Réponse Groq invalide');
   }
 
-  // Drop any error segment where invalide === valide (model validation bypass)
-  const cleaned = result.segments.map(s =>
-    s.type === 'error' && s.invalide === s.valide
-      ? { type: 'text', content: s.valide }
-      : s
+  const corrections = result.corrections.filter(c =>
+    c.original && c.invalide && c.original !== c.invalide &&
+    !/\s/.test(c.original) && !/\s/.test(c.invalide)
   );
 
-  return processSegments(cleaned);
+  return applyCorrections(text, corrections);
 }
 
 export function validateCorrection(userAnswer, correctWord) {

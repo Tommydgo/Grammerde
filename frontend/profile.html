@@ -22,7 +22,7 @@
     <span class="btn btn-ghost hidden" id="user-menu" style="cursor:default">
       <span id="nav-username"></span>
     </span>
-    <button class="btn btn-ghost" id="btn-logout" data-i18n="nav.logout">Déconnexion</button>
+    <button class="btn btn-ghost" id="btn-logout">Déconnexion</button>
   </div>
 </nav>
 
@@ -36,8 +36,8 @@
       <div class="profile-since" id="profile-since"></div>
     </div>
     <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
-      <button class="btn btn-outline" id="btn-edit-profile" data-i18n="profile.btn_edit">Modifier le profil</button>
-      <a href="/" class="btn btn-primary" data-i18n="profile.btn_new_game">Nouvelle partie</a>
+      <button class="btn btn-outline" id="btn-edit-profile">Modifier le profil</button>
+      <a href="/" class="btn btn-primary">Nouvelle partie</a>
     </div>
   </div>
 
@@ -115,14 +115,14 @@
 </div>
 
 <footer>
-  <span data-i18n="footer">Grammerde © 2026 — Corriger, c'est gagner.</span>
+  <span>Grammerde © 2026 — Corriger, c'est gagner.</span>
 </footer>
 
 <!-- Edit Profile Modal -->
 <div id="modal-edit-profile" class="modal-overlay hidden">
   <div class="modal">
     <div class="modal-title">
-      <span data-i18n="profile.modal.title">Modifier le profil</span>
+      <span>Modifier le profil</span>
       <span class="modal-close" id="close-edit-profile">&times;</span>
     </div>
     <div style="display:flex;flex-direction:column;align-items:center;gap:16px;margin-bottom:20px">
@@ -130,23 +130,23 @@
     </div>
     <form id="form-edit-profile">
       <div class="form-group">
-        <label class="form-label" data-i18n="profile.modal.username">Pseudo</label>
+        <label class="form-label">Pseudo</label>
         <input id="edit-username" type="text" class="form-input" placeholder="GrammairNinja" required minlength="2">
       </div>
       <div class="form-group">
-        <label class="form-label" data-i18n="profile.modal.avatar_seed">Graine d'avatar</label>
+        <label class="form-label">Graine d'avatar</label>
         <input id="edit-avatar-seed" type="text" class="form-input" placeholder="mot-clé ou pseudo" autocomplete="off">
-        <div style="font-size:12px;color:var(--text-muted);margin-top:4px" data-i18n="profile.modal.avatar_hint">Laissez vide pour utiliser votre pseudo</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:4px">Laissez vide pour utiliser votre pseudo</div>
       </div>
       <div class="form-error" id="edit-profile-error"></div>
       <div style="display:flex;gap:8px;margin-top:16px">
-        <button type="button" class="btn btn-outline" id="btn-cancel-edit" style="flex:1" data-i18n="profile.modal.cancel">Annuler</button>
-        <button type="submit" class="btn btn-primary" style="flex:1" data-i18n="profile.modal.save">Enregistrer</button>
+        <button type="button" class="btn btn-outline" id="btn-cancel-edit" style="flex:1">Annuler</button>
+        <button type="submit" class="btn btn-primary" style="flex:1">Enregistrer</button>
       </div>
     </form>
   </div>
 </div>
 
-<script type="module" src="/js/profile.js"></script>
+<script type="module" src="js/profile.js"></script>
 </body>
 </html>

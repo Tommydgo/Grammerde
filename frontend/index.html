@@ -54,43 +54,43 @@
     <a href="profile.html" class="btn btn-ghost hidden" id="user-menu">
       <span id="nav-username"></span>
     </a>
-    <button class="btn btn-ghost" id="btn-login" data-i18n="nav.login">Connexion</button>
-    <button class="btn btn-outline" id="btn-register" data-i18n="nav.register">Inscription</button>
-    <button class="btn btn-ghost hidden" id="btn-logout" data-i18n="nav.logout">Déconnexion</button>
+    <button class="btn btn-ghost" id="btn-login">Connexion</button>
+    <button class="btn btn-outline" id="btn-register">Inscription</button>
+    <button class="btn btn-ghost hidden" id="btn-logout">Déconnexion</button>
   </div>
 </nav>
 
 <!-- Hero -->
 <section class="hero">
-  <span class="hero-eyebrow" data-i18n="hero.eyebrow">Jeu de correction de texte</span>
-  <h1 data-i18n-html="hero.title_html">
+  <span class="hero-eyebrow">Jeu de correction de texte</span>
+  <h1>
     Sauras-tu<br>
     <span class="correct">trouver</span> toutes<br>les
     <span class="strike">fautes</span> ?
   </h1>
-  <p class="hero-sub" data-i18n="hero.subtitle">
+  <p class="hero-sub">
     Mission du jour : sauver la langue française.
   </p>
   <div class="hero-cta">
-    <button class="btn btn-primary btn-lg" data-i18n="hero.btn_play" onclick="document.querySelector('.configurator').scrollIntoView({behavior:'smooth'})">
+    <button class="btn btn-primary btn-lg" onclick="document.querySelector('.configurator').scrollIntoView({behavior:'smooth'})">
       Jouer maintenant
     </button>
-    <button class="btn btn-outline btn-lg" id="btn-vs-hero" data-i18n="hero.btn_vs">Mode VS ⚔</button>
+    <button class="btn btn-outline btn-lg" id="btn-vs-hero">Mode VS ⚔</button>
   </div>
 </section>
 
 <!-- Configurator -->
 <section class="configurator">
   <div class="card">
-    <div class="card-title" data-i18n="configurator.title">Configurer une partie</div>
+    <div class="card-title">Configurer une partie</div>
 
     <div class="config-section">
-      <div class="config-label" data-i18n="configurator.error_types">Types de fautes</div>
+      <div class="config-label">Types de fautes</div>
       <div class="error-types">
-        <label class="type-chip active"><input type="checkbox" data-type="conjugaison" checked><span data-i18n="configurator.types.conjugaison">Conjugaison</span></label>
-        <label class="type-chip active"><input type="checkbox" data-type="accord" checked><span data-i18n="configurator.types.accord">Accords</span></label>
-        <label class="type-chip active"><input type="checkbox" data-type="homophone" checked><span data-i18n="configurator.types.homophone">Homophones</span></label>
-        <label class="type-chip active"><input type="checkbox" data-type="orthographe" checked><span data-i18n="configurator.types.orthographe">Orthographe</span></label>
+        <label class="type-chip active"><input type="checkbox" data-type="conjugaison" checked><span>Conjugaison</span></label>
+        <label class="type-chip active"><input type="checkbox" data-type="accord" checked><span>Accords</span></label>
+        <label class="type-chip active"><input type="checkbox" data-type="homophone" checked><span>Homophones</span></label>
+        <label class="type-chip active"><input type="checkbox" data-type="orthographe" checked><span>Orthographe</span></label>
       </div>
     </div>
 
@@ -110,7 +110,7 @@
 
     <div class="config-actions">
       <button class="btn btn-primary" id="btn-launch" disabled>Lancer la partie</button>
-      <button class="btn btn-outline" id="btn-vs" data-i18n="configurator.btn_vs">Mode VS ⚔</button>
+      <button class="btn btn-outline" id="btn-vs">Mode VS ⚔</button>
     </div>
   </div>
 </section>
@@ -118,20 +118,20 @@
 <!-- Leaderboard -->
 <section class="leaderboard-section">
   <div class="section-header">
-    <h2 class="section-title" data-i18n="leaderboard.title">Classement</h2>
+    <h2 class="section-title">Classement</h2>
     <div class="filter-tabs">
-      <button class="filter-tab" data-period="week" data-i18n="leaderboard.filter.week">Cette semaine</button>
-      <button class="filter-tab" data-period="month" data-i18n="leaderboard.filter.month">Ce mois</button>
-      <button class="filter-tab active" data-period="all" data-i18n="leaderboard.filter.all">Tout temps</button>
+      <button class="filter-tab" data-period="week">Cette semaine</button>
+      <button class="filter-tab" data-period="month">Ce mois</button>
+      <button class="filter-tab active" data-period="all">Tout temps</button>
     </div>
   </div>
   <table class="leaderboard-table">
     <thead>
       <tr>
         <th>#</th>
-        <th data-i18n="leaderboard.col.player">Joueur</th>
-        <th data-i18n="leaderboard.col.avg_score">Score moy.</th>
-        <th data-i18n="leaderboard.col.games">Parties</th>
+        <th>Joueur</th>
+        <th>Score moy.</th>
+        <th>Parties</th>
       </tr>
     </thead>
     <tbody id="lb-tbody">
@@ -141,30 +141,30 @@
 </section>
 
 <footer>
-  <span data-i18n="footer">Grammerde © 2026 — Corriger, c'est gagner.</span>
+  <span>Grammerde © 2026 — Corriger, c'est gagner.</span>
 </footer>
 
 <!-- Login Modal -->
 <div id="modal-login" class="modal-overlay hidden">
   <div class="modal">
     <div class="modal-title">
-      <span data-i18n="modal.login.title">Connexion</span>
+      <span>Connexion</span>
       <span class="modal-close" id="close-login">&times;</span>
     </div>
     <form id="form-login">
       <div class="form-group">
-        <label class="form-label" data-i18n="modal.login.email">Email</label>
+        <label class="form-label">Email</label>
         <input id="login-email" type="email" class="form-input" placeholder="vous@exemple.fr" required>
       </div>
       <div class="form-group">
-        <label class="form-label" data-i18n="modal.login.password">Mot de passe</label>
+        <label class="form-label">Mot de passe</label>
         <input id="login-password" type="password" class="form-input" placeholder="••••••••" required>
       </div>
       <div class="form-error" id="login-error"></div>
-      <button type="submit" class="btn btn-primary" style="width:100%;margin-top:16px" data-i18n="modal.login.submit">Se connecter</button>
+      <button type="submit" class="btn btn-primary" style="width:100%;margin-top:16px">Se connecter</button>
     </form>
     <p style="text-align:center;margin-top:16px;font-size:13px;color:var(--text-dim)">
-      <span data-i18n="modal.login.no_account">Pas de compte ?</span> <a href="#" id="link-to-register" style="color:var(--green)" data-i18n="modal.login.link_register">S'inscrire</a>
+      <span>Pas de compte ?</span> <a href="#" id="link-to-register" style="color:var(--green)">S'inscrire</a>
     </p>
   </div>
 </div>
@@ -173,31 +173,31 @@
 <div id="modal-register" class="modal-overlay hidden">
   <div class="modal">
     <div class="modal-title">
-      <span data-i18n="modal.register.title">Inscription</span>
+      <span>Inscription</span>
       <span class="modal-close" id="close-register">&times;</span>
     </div>
     <form id="form-register">
       <div class="form-group">
-        <label class="form-label" data-i18n="modal.register.username">Pseudo</label>
+        <label class="form-label">Pseudo</label>
         <input id="register-username" type="text" class="form-input" placeholder="GrammairNinja" required minlength="2">
       </div>
       <div class="form-group">
-        <label class="form-label" data-i18n="modal.register.email">Email</label>
+        <label class="form-label">Email</label>
         <input id="register-email" type="email" class="form-input" placeholder="vous@exemple.fr" required>
       </div>
       <div class="form-group">
-        <label class="form-label" data-i18n="modal.register.password">Mot de passe</label>
+        <label class="form-label">Mot de passe</label>
         <input id="register-password" type="password" class="form-input" placeholder="••••••••" required minlength="6">
       </div>
       <div class="form-error" id="register-error"></div>
-      <button type="submit" class="btn btn-primary" style="width:100%;margin-top:16px" data-i18n="modal.register.submit">Créer mon compte</button>
+      <button type="submit" class="btn btn-primary" style="width:100%;margin-top:16px">Créer mon compte</button>
     </form>
     <p style="text-align:center;margin-top:16px;font-size:13px;color:var(--text-dim)">
-      <span data-i18n="modal.register.has_account">Déjà un compte ?</span> <a href="#" id="link-to-login" style="color:var(--green)" data-i18n="modal.register.link_login">Se connecter</a>
+      <span>Déjà un compte ?</span> <a href="#" id="link-to-login" style="color:var(--green)">Se connecter</a>
     </p>
   </div>
 </div>
 
-<script type="module" src="/js/app.js"></script>
+<script type="module" src="js/app.js"></script>
 </body>
 </html>

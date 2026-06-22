@@ -20,8 +20,8 @@
     <a href="profile.html" class="btn btn-ghost hidden" id="user-menu">
       <span id="nav-username"></span>
     </a>
-    <button class="btn btn-ghost" id="btn-login" data-i18n="nav.login">Connexion</button>
-    <button class="btn btn-ghost hidden" id="btn-logout" data-i18n="nav.logout">Déconnexion</button>
+    <button class="btn btn-ghost" id="btn-login">Connexion</button>
+    <button class="btn btn-ghost hidden" id="btn-logout">Déconnexion</button>
   </div>
 </nav>
 
@@ -30,8 +30,8 @@
   <div class="game-layout">
     <main class="game-main">
       <div class="game-header">
-        <h1 class="game-title" data-i18n="game.title">Trouve les fautes</h1>
-        <button class="btn btn-primary" id="btn-submit" data-i18n="game.btn_submit">Terminer et voir le score</button>
+        <h1 class="game-title">Trouve les fautes</h1>
+        <button class="btn btn-primary" id="btn-submit">Terminer et voir le score</button>
       </div>
 
       <div class="progress-label" id="progress-label">0 / 0 fautes corrigées</div>
@@ -47,23 +47,23 @@
     <aside class="game-sidebar">
       <div class="timer hidden" id="timer-block">
         <div class="timer-value" id="timer-value">2:00</div>
-        <div class="timer-label" data-i18n="game.timer_label">Temps restant</div>
+        <div class="timer-label">Temps restant</div>
       </div>
 
       <div class="sidebar-card">
         <div class="stat-row">
-          <span class="stat-label" data-i18n="game.sidebar.corrections">Corrections</span>
+          <span class="stat-label">Corrections</span>
           <span class="stat-value green" id="stat-corrections">0</span>
         </div>
         <div class="stat-row" style="margin-bottom:0">
-          <span class="stat-label" data-i18n="game.sidebar.total_errors">Total fautes</span>
+          <span class="stat-label">Total fautes</span>
           <span class="stat-value red" id="stat-total">—</span>
         </div>
       </div>
 
       <div class="sidebar-card" style="font-size:12px;color:var(--text-dim);line-height:1.6">
-        <strong style="color:var(--text)" data-i18n="game.sidebar.how_to_title">Comment jouer</strong><br><br>
-        <span data-i18n="game.sidebar.how_to_text">Cliquez sur n'importe quel mot pour proposer une correction. Les fautes peuvent être : conjugaison, orthographe, accords, homophones, ponctuation ou syntaxe.</span>
+        <strong style="color:var(--text)">Comment jouer</strong><br><br>
+        <span>Cliquez sur n'importe quel mot pour proposer une correction. Les fautes peuvent être : conjugaison, orthographe, accords, homophones, ponctuation ou syntaxe.</span>
       </div>
     </aside>
   </div>
@@ -78,8 +78,8 @@
     </div>
 
     <div style="display:flex;gap:12px;justify-content:center;margin-bottom:40px">
-      <button class="btn btn-primary btn-lg" id="btn-replay" data-i18n="game.results.btn_replay">Rejouer</button>
-      <a href="profile.html" class="btn btn-outline btn-lg" data-i18n="game.results.btn_profile">Voir mon profil</a>
+      <button class="btn btn-primary btn-lg" id="btn-replay">Rejouer</button>
+      <a href="profile.html" class="btn btn-outline btn-lg">Voir mon profil</a>
     </div>
 
     <h2 style="font-family:var(--font-display);font-size:1.3rem;font-weight:700;margin-bottom:16px">Mes statistiques</h2>
@@ -102,14 +102,14 @@
       </div>
     </div>
 
-    <h2 style="font-family:var(--font-display);font-size:1.3rem;font-weight:700;margin-bottom:16px" data-i18n="game.results.detail_title">Détail du texte</h2>
+    <h2 style="font-family:var(--font-display);font-size:1.3rem;font-weight:700;margin-bottom:16px">Détail du texte</h2>
 
     <div class="results-legend">
-      <span class="results-legend-title" data-i18n="game.results.legend.title">Légende</span>
-      <span class="result-badge badge-result-green" data-i18n="game.results.legend.correct">Correctement corrigé</span>
-      <span class="result-badge badge-result-orange" data-i18n="game.results.legend.wrong">Mal corrigé</span>
-      <span class="result-badge badge-result-red" data-i18n="game.results.legend.missed">Non corrigé</span>
-      <span class="result-badge badge-result-blue" data-i18n="game.results.legend.valid_touched">Mot correct modifié</span>
+      <span class="results-legend-title">Légende</span>
+      <span class="result-badge badge-result-green">Correctement corrigé</span>
+      <span class="result-badge badge-result-orange">Mal corrigé</span>
+      <span class="result-badge badge-result-red">Non corrigé</span>
+      <span class="result-badge badge-result-blue">Mot correct modifié</span>
     </div>
 
     <div class="text-display" id="results-text"></div>
@@ -119,25 +119,25 @@
 <!-- Correction Popup -->
 <div id="popup-overlay" class="popup-overlay hidden">
   <div class="popup">
-    <div class="popup-label" data-i18n="game.popup.invalid_label">Mot invalide affiché :</div>
+    <div class="popup-label">Mot invalide affiché :</div>
     <div class="popup-word" id="popup-word"></div>
-    <div class="popup-label" style="margin-top:12px" data-i18n="game.popup.valid_label">Mot valide (votre correction) :</div>
+    <div class="popup-label" style="margin-top:12px">Mot valide (votre correction) :</div>
     <input
       type="text"
       class="popup-input"
       id="popup-input"
-      data-i18n-ph="game.popup.placeholder"
+     
       placeholder="Votre correction…"
       autocomplete="off"
       spellcheck="false"
     >
     <div class="popup-actions">
-      <button class="btn btn-ghost" id="btn-popup-skip" data-i18n="game.popup.skip">Passer</button>
-      <button class="btn btn-green" id="btn-popup-validate" data-i18n="game.popup.validate">Valider</button>
+      <button class="btn btn-ghost" id="btn-popup-skip">Passer</button>
+      <button class="btn btn-green" id="btn-popup-validate">Valider</button>
     </div>
   </div>
 </div>
 
-<script type="module" src="/js/game.js"></script>
+<script type="module" src="js/game.js"></script>
 </body>
 </html>

@@ -38,15 +38,15 @@
     <a href="profile.html" class="btn btn-ghost hidden" id="user-menu">
       <span id="nav-username"></span>
     </a>
-    <a href="/" class="btn btn-ghost" data-i18n="nav.back">← Retour</a>
-    <button class="btn btn-ghost hidden" id="btn-logout" data-i18n="nav.logout">Déconnexion</button>
+    <a href="/" class="btn btn-ghost">← Retour</a>
+    <button class="btn btn-ghost hidden" id="btn-logout">Déconnexion</button>
   </div>
 </nav>
 
 <!-- Setup View -->
 <div id="view-setup">
   <div class="vs-setup">
-    <h1 class="vs-title"><span data-i18n="vs.title">Mode VS</span></h1>
+    <h1 class="vs-title"><span>Mode VS</span></h1>
     <p style="color:var(--text-dim);margin-bottom:8px">
       Affronte un ami en temps réel. Corrige un maximum de fautes avant ton ami.
     </p>
@@ -54,7 +54,7 @@
     <div class="vs-options">
       <!-- Create room -->
       <div class="card" style="text-align:left">
-        <div class="card-title" data-i18n="vs.create.title">Créer une room</div>
+        <div class="card-title">Créer une room</div>
         <div class="form-group" style="margin-bottom:16px">
           <label class="form-label">Langue du texte</label>
           <div class="difficulty-group lang-group" style="grid-template-columns:repeat(2,1fr);margin-top:8px">
@@ -71,9 +71,9 @@
 
       <!-- Join room -->
       <div class="card" style="text-align:left">
-        <div class="card-title" data-i18n="vs.join.title">Rejoindre une room</div>
+        <div class="card-title">Rejoindre une room</div>
         <div class="form-group" style="margin-bottom:16px">
-          <label class="form-label" data-i18n="vs.join.code_label">Code de la room</label>
+          <label class="form-label">Code de la room</label>
           <input
             id="join-code"
             type="text"
@@ -83,7 +83,7 @@
             style="text-transform:uppercase;letter-spacing:0.1em;font-size:18px;text-align:center"
           >
         </div>
-        <button class="btn btn-outline" style="width:100%" id="btn-join-room" data-i18n="vs.join.btn">Rejoindre</button>
+        <button class="btn btn-outline" style="width:100%" id="btn-join-room">Rejoindre</button>
       </div>
     </div>
 
@@ -113,13 +113,13 @@
 <!-- Waiting View -->
 <div id="view-waiting" class="hidden">
   <div class="vs-setup">
-    <h1 class="vs-title" data-i18n="vs.waiting.title">En attente…</h1>
+    <h1 class="vs-title">En attente…</h1>
     <p style="color:var(--text-dim);margin-bottom:24px" id="waiting-status">Connexion…</p>
 
     <div class="card" id="waiting-code-card">
-      <div class="config-label" data-i18n="vs.waiting.code_label">Code à partager</div>
+      <div class="config-label">Code à partager</div>
       <div class="room-code-display" id="display-code">——</div>
-      <p style="font-size:13px;color:var(--text-dim)" data-i18n="vs.waiting.share_hint">Partagez ce code à votre adversaire</p>
+      <p style="font-size:13px;color:var(--text-dim)">Partagez ce code à votre adversaire</p>
     </div>
 
     <div id="waiting-players" class="hidden" style="display:flex;gap:40px;justify-content:center;align-items:center;margin-top:24px">
@@ -266,25 +266,25 @@
 <!-- VS Correction Popup -->
 <div id="vs-popup" class="popup-overlay hidden">
   <div class="popup">
-    <div class="popup-label" data-i18n="vs.popup.invalid_label">Mot invalide affiché :</div>
+    <div class="popup-label">Mot invalide affiché :</div>
     <div class="popup-word" id="vs-popup-word"></div>
-    <div class="popup-label" style="margin-top:12px" data-i18n="vs.popup.valid_label">Mot valide (votre correction) :</div>
+    <div class="popup-label" style="margin-top:12px">Mot valide (votre correction) :</div>
     <input
       type="text"
       class="popup-input"
       id="vs-popup-input"
-      data-i18n-ph="vs.popup.placeholder"
+     
       placeholder="Votre correction…"
       autocomplete="off"
       spellcheck="false"
     >
     <div class="popup-actions">
-      <button class="btn btn-ghost" id="btn-vs-skip" data-i18n="vs.popup.skip">Passer</button>
-      <button class="btn btn-green" id="btn-vs-validate" data-i18n="vs.popup.validate">Valider</button>
+      <button class="btn btn-ghost" id="btn-vs-skip">Passer</button>
+      <button class="btn btn-green" id="btn-vs-validate">Valider</button>
     </div>
   </div>
 </div>
 
-<script type="module" src="/js/vs.js"></script>
+<script type="module" src="js/vs.js"></script>
 </body>
 </html>
