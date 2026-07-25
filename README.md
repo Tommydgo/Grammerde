@@ -38,24 +38,6 @@ Classement séparé pour le mode Solo et le mode VS.
 
 ### 🔐 Compte (facultatif)
 Tu peux jouer sans créer de compte. Pour garder ton historique, suivre ta progression et apparaître au classement, inscris-toi avec un pseudo, un email et un mot de passe.
-
-## Lancer le projet
-
-```bash
-npm install
-npm start
-```
-
-L'application est accessible sur [http://localhost:3000](http://localhost:3000).
-
-Variables d'environnement requises dans un fichier `.env` :
-
-```env
-GROQ_API_KEY=gsk_...
-JWT_SECRET=changez-moi-en-production
-PORT=3000
-```
-
 ---
 
 *Grammerde © 2026 — Corriger, c'est gagner.*
