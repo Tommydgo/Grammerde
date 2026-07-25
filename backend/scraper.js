@@ -41,6 +41,7 @@ async function scrapeWikipedia(lang) {
 
 function cleanText(text, lang = 'fr') {
   let cleaned = text
+    .replace(/={2,}[^=]+=+/g, '')
     .replace(/\[\d+\]/g, '')
     .replace(/\[note \d+\]/gi, '')
     .replace(/\[réf\.\s*nécessaire\]/gi, '')
