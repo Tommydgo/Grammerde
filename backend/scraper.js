@@ -1,5 +1,6 @@
 import fetch from 'node-fetch';
-import { load } from 'cheerio';
+
+const USER_AGENT = 'Grammerde/1.0 (https://grammerde.onrender.com; tommydiago34@gmail.com)';
 
 export async function scrapeRandom(lang = 'fr') {
   const MAX_RETRIES = 10;
@@ -15,22 +16,23 @@ export async function scrapeRandom(lang = 'fr') {
 }
 
 async function scrapeWikipedia(lang) {
-  const res = await fetch(`https://${lang}.wikipedia.org/wiki/Special:Random`, {
-    headers: { 'Accept-Language': `${lang};q=0.9`, 'User-Agent': 'Grammerde/1.0' },
-    redirect: 'follow',
-  });
-  const html = await res.text();
-  const $ = load(html);
-  const url = res.url;
+  // Step 1: get a random article title via MediaWiki API
+  const randomUrl = `https://${lang}.wikipedia.org/w/api.php?action=query&list=random&rnnamespace=0&rnlimit=1&format=json`;
+  const randomRes = await fetch(randomUrl, { headers: { 'User-Agent': USER_AGENT } });
+  const randomData = await randomRes.json();
+  const title = randomData.query.random[0].title;
 
-  const paragraphs = [];
-  $('#mw-content-text .mw-parser-output > p').each((_, el) => {
-    const text = $(el).text().trim();
-    if (text.length > 50) paragraphs.push(text);
-  });
+  // Step 2: fetch the article's plain-text extract
+  const extractUrl = `https://${lang}.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(title)}&prop=extracts&explaintext=true&format=json`;
+  const extractRes = await fetch(extractUrl, { headers: { 'User-Agent': USER_AGENT } });
+  const extractData = await extractRes.json();
+  const pages = extractData.query.pages;
+  const page = pages[Object.keys(pages)[0]];
+  const url = `https://${lang}.wikipedia.org/wiki/${encodeURIComponent(title)}`;
 
-  let text = paragraphs.join('\n\n');
-  text = cleanText(text, lang);
+  if (!page.extract) throw new Error('Article sans contenu');
+
+  let text = cleanText(page.extract, lang);
   text = trimToWordCount(text, 250, 350);
 
   if (text.split(/\s+/).length < 200) throw new Error('Article trop court');
